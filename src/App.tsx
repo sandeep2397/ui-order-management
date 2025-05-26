@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ApolloAppProvider from "./context/ApolloProvider";
+import { Container, Typography } from "@mui/material";
+import NavBar from "./components/NavBar";
+import ProductList from "./pages/ProductList";
+import ProductDetails from "./pages/ProductDetails";
+import OrderDetails from "./pages/OrderDetails";
+import OrderList from "./pages/OrderList";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloAppProvider>
+      <BrowserRouter>
+        <NavBar />
+        <Container>
+          <Routes>
+            <Route path="/" element={<OrderList />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/orders/:id" element={<OrderDetails />} />
+          </Routes>
+        </Container>
+      </BrowserRouter>
+    </ApolloAppProvider>
   );
-}
+};
 
 export default App;
