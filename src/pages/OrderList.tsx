@@ -54,7 +54,7 @@ const OrderList: React.FC = () => {
 
   return (
     <Box sx={{ padding: "24px" }}>
-      <Typography variant="h4" gutterBottom textAlign="center">
+      <Typography variant="h4" gutterBottom textAlign="left">
         Your Orders
       </Typography>
 

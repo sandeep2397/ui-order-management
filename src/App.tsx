@@ -13,7 +13,7 @@ const App: React.FC = () => {
     <ApolloAppProvider>
       <BrowserRouter>
         <NavBar />
-        <Container>
+        <Container sx={{ paddingTop: "40px", marginBottom: "40px" }}>
           <Routes>
             <Route path="/" element={<OrderList />} />
             <Route path="/products" element={<ProductList />} />
