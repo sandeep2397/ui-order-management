@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_ORDERS } from "../graphql/queries";
 import {
@@ -13,14 +13,19 @@ import {
   ListItemText,
   CardMedia,
   Box,
+  Button,
+  Drawer,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import InTransitIcon from "@mui/icons-material/LocalShipping";
 import CompletedIcon from "@mui/icons-material/CheckCircle";
+import UploadIcon from "@mui/icons-material/CloudUpload";
+import FileUpload from "../components/FileUpload"; // ✅ Import FileUpload Component
 
 const OrderList: React.FC = () => {
   const { data, loading, error } = useQuery(GET_ORDERS);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
@@ -53,14 +58,48 @@ const OrderList: React.FC = () => {
     return <Typography color="error">Error fetching orders</Typography>;
 
   return (
-    <Box sx={{ padding: "24px" }}>
-      <Typography variant="h4" gutterBottom textAlign="left">
-        Your Orders
-      </Typography>
+    <Box sx={{ padding: "24px", margin: "16px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+        }}
+      >
+        <Typography variant="h4" gutterBottom textAlign="left">
+          Your Orders
+        </Typography>
+
+        {/* ✅ Upload Files Button */}
+        <Button
+          variant="contained"
+          startIcon={<UploadIcon />}
+          onClick={() => setIsModalOpen(true)}
+        >
+          Upload Files
+        </Button>
+      </Box>
+
+      {/* ✅ Drawer for File Upload */}
+      {/* <Drawer
+        anchor="right"
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        sx={{ width: "400px" }}
+      > */}
+      <Box sx={{ padding: "24px" }}>
+        <FileUpload
+          isOpen={isModalOpen}
+          handleClose={() => {
+            setIsModalOpen(false);
+          }}
+        />
+      </Box>
+      {/* </Drawer> */}
 
       {data.orders?.map((order: any, index: number) => {
         const totalQuantity = order.products.reduce(
-          (sum: number, product: any) => sum + product.quantity,
+          (sum: number, product: any) => sum + product?.quantity,
           0
         );
 
@@ -141,7 +180,6 @@ const OrderList: React.FC = () => {
                       borderBottom: "1px solid #ddd",
                     }}
                   >
-                    {/* ✅ Display product image */}
                     <CardMedia
                       component="img"
                       sx={{
@@ -159,11 +197,6 @@ const OrderList: React.FC = () => {
                       primary={
                         <Typography variant="body1" fontWeight="bold">
                           {product.title}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography variant="body2" color="text.secondary">
-                          Quantity: {product.quantity} | ₹{product.price}
                         </Typography>
                       }
                     />
